@@ -1,0 +1,41 @@
+<html>
+
+<head>
+    <title>
+        Recruitment Tasks - Inline Input
+    </title>
+</head>
+
+<body>
+    <div id="input_container"></div>
+
+    <script type="text/javascript">
+
+        var placeholderText = "Lorem ipsum";
+        switchToText();
+
+        function switchToInput() {
+            document.getElementById("input_container").innerHTML = "<input type='text' id='input_field' onfocusout='switchToText()' onchange='updateText()'></input>";
+            document.getElementById("input_field").focus();
+            document.getElementById("input_field").value = placeholderText;
+
+            const inputField = document.getElementById("input_field");
+            inputField.addEventListener("keyup", function (event) {
+                if (event.key == "Enter") {
+                    switchToText();
+                }
+            })
+        }
+
+        function switchToText() {
+            document.getElementById("input_container").innerHTML = "<div onclick='switchToInput()'>" + placeholderText + "</div>";
+        }
+
+        function updateText() {
+            placeholderText = document.getElementById("input_field").value;
+        }
+
+    </script>
+</body>
+
+</html>

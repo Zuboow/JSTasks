@@ -1,0 +1,224 @@
+<html>
+
+<head>
+    <title>
+        Recruitment Tasks - Microblog
+    </title>
+</head>
+
+<body>
+    <div class="popupBackground">
+        <div class="popupForm">
+            <button style="float: right" onclick="CloseForm()">X</button>
+            <br>
+            <form onsubmit="SubmitForm()" style="padding: 15px;" action="#">
+                <input class="fullWidth bottomMargin" type="text" id="formTitle" placeholder="Enter post title..."
+                    required>
+                <textarea class="fullWidth bottomMargin" style="resize: none;" id="formContent" placeholder="Enter post content..." rows="10"
+                    required></textarea>
+                <input class="buttonPadding" type="submit">
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="title">
+            <h1>Welcome to my Microblog!</h1>
+        </div>
+        <div class="centerItems">
+            <button class="buttonPadding" onclick="OpenForm()">Add new Post</button>
+        </div>
+    </div>
+    <hr>
+
+    <div id="info"></div>
+    <br><input type='file' id='fileInput' accept='.json'><hr>
+    <div id="posts"></div>
+
+    <script type="text/javascript">
+
+        var mockPosts = [
+            {
+                id: 1,
+                title: "Mock Post I",
+                content: "This is content from post I.",
+                plusRating: 12,
+                minusRating: 0,
+                rated: false
+            },
+            {
+                id: 2,
+                title: "Mock Post II",
+                content: "This is content from post II.",
+                plusRating: 2,
+                minusRating: 9,
+                rated: false
+            },
+            {
+                id: 3,
+                title: "Mock Post III",
+                content: "This is content from post III.",
+                plusRating: 5,
+                minusRating: 1,
+                rated: false
+            }
+        ];
+
+        var blogPosts = mockPosts;
+
+        const fileInput = document.getElementById("fileInput");
+            fileInput.addEventListener("change", (event) => {
+                var importedFile = event.target.files[0];
+                ImportArticles(importedFile);
+            })
+
+        PrintArticles();
+
+        function PrintArticles() {
+            document.getElementById("posts").innerHTML = "";
+            document.getElementById("info").innerHTML = "Currently there are " + blogPosts.length + " posts you can check out.<br>You can import more using input below.";
+            blogPosts.forEach(post => {
+                document.getElementById("posts").innerHTML += 
+                    "<p><div class='row'><div class='title'><b>" + post.title + "</b></div>"
+                    + "<div><button class='buttonPadding' onclick='RemovePost("+ post.id +")'>Remove post</button></div></div><br>" + post.content + "</p><br>"
+                    + (!post.rated ? "<button onclick='Rate(1, " + post.id + ")'>+</button><button onclick='Rate(-1, " + post.id + ")'>-</button><br>" : "")
+                    + "<span style='color: green;'>" + post.plusRating + "</span>/<span style='color:red;'>" + post.minusRating + "</span><hr>";
+            });
+        };
+
+        function Rate(vote, id) {
+            switch (vote) {
+                case 1:
+                blogPosts.forEach(post => {
+                        if (post.id == id) {
+                            post.plusRating++;
+                            post.rated = true;
+                        }
+                    });
+                    break;
+                case -1:
+                blogPosts.forEach(post => {
+                        if (post.id == id) {
+                            post.minusRating++;
+                            post.rated = true;
+                        }
+                    });
+                    break;
+            }
+            PrintArticles();
+        }
+
+        function OpenForm() {
+            var formWindow = document.getElementsByClassName("popupBackground")[0];
+            formWindow.style.display = "block";
+        }
+
+        function CloseForm() {
+            var formWindow = document.getElementsByClassName("popupBackground")[0];
+            formWindow.style.display = "none";
+        }
+
+        function SubmitForm() {
+            var maxId = 1;
+            blogPosts.forEach(post => {
+                if (maxId < post.id) maxId = post.id;
+            });
+            blogPosts.push({
+                id: maxId + 1,
+                title: document.getElementById("formTitle").value,
+                content: document.getElementById("formContent").value,
+                plusRating: 0,
+                minusRating: 0,
+                rated: false
+            });
+
+            console.log(blogPosts);
+
+            document.getElementById("formTitle").value = "";
+            document.getElementById("formContent").value = "";
+
+            CloseForm();
+            PrintArticles();
+            alert("Your post has been added!");
+        }
+
+        function ImportArticles(articlesFile) {
+            var fileReader = new FileReader();
+            fileReader.addEventListener("load", function (event) {
+                var maxId = 1;
+                blogPosts.forEach(post => {
+                    if (maxId < post.id) maxId = post.id;
+                });
+                JSON.parse(event.target.result).forEach(article => {
+                    article.id = maxId + 1;
+                    blogPosts.push(article);
+                    maxId++;
+                });
+                PrintArticles();
+            });
+            fileReader.readAsText(articlesFile);
+        }
+
+        function RemovePost(id) {
+            blogPosts.forEach((post, index) => {
+                if (post.id == id){
+                    blogPosts.splice(index, 1);
+                }
+            });
+            PrintArticles();
+        }
+
+    </script>
+</body>
+
+</html>
+
+<style>
+    .title {
+        flex: 90%;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    .buttonPadding {
+        padding: 12px;
+    }
+
+    .centerItems {
+        margin: auto;
+    }
+
+    .popupBackground {
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: 5;
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .popupForm {
+        margin: auto;
+        margin-top: 10%;
+        width: 40%;
+        height: 30%;
+        z-index: 6;
+        background-color: white;
+    }
+
+    .fullWidth {
+        width: 100%;
+    }
+
+    .fullHeight {
+        height: 100%;
+    }
+
+    .bottomMargin {
+        margin-bottom: 15px;
+    }
+</style>

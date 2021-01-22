@@ -1,0 +1,66 @@
+<html>
+
+<head>
+    <title>
+    </title>
+</head>
+
+<body>
+    <div>
+        <input type="text" id="searchbox">
+        <button onclick="ClearSearchbox()">Clear</button>
+
+        <div id="values_container"></div>
+    </div>
+
+    <script type="text/javascript">
+
+        var colorList = [ "Red", "Green", "Blue", "Yellow", "Brown", "Magenta", "Pink", "Black", "White", "Gray"];
+        var filteredColorList = colorList;
+        const searchBox = document.getElementById("searchbox");
+
+        searchBox.addEventListener('input', Search);
+        PrintValues();
+        ManageTitle();
+        
+        function PrintValues(){
+            document.getElementById("values_container").innerHTML = "";
+            filteredColorList.forEach(color => {
+                document.getElementById("values_container").innerHTML += "<p onclick='ChangeColor(event.target)' style='cursor: pointer;'><b>" + color + "</b></p>"
+            });
+        }
+
+        function Search(searchbox){
+            filteredColorList = [];
+            colorList.forEach(color => {
+                if (color.toLowerCase().includes(searchbox.target.value.trim().toLowerCase())){
+                    filteredColorList.push(color);
+                }
+            });
+            PrintValues();
+            ManageTitle();
+        }
+
+        function ChangeColor(target){
+            target.style.color = "green";
+        }
+
+        function ManageTitle(){
+            if (filteredColorList.length == 1){
+                document.title = filteredColorList[0];
+            } else {
+                document.title = "Recruitment Tasks - Searchbox";
+            }
+        }
+
+        function ClearSearchbox(){
+            searchBox.value = "";
+            filteredColorList = colorList;
+            PrintValues();
+            ManageTitle();
+        }
+
+    </script>
+</body>
+
+</html>
