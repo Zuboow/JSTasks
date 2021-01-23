@@ -11,7 +11,7 @@
         <div class="popupForm">
             <button style="float: right; cursor: pointer;" onclick="CloseForm()">X</button>
             <br>
-            <form onsubmit="SubmitForm()" style="padding: 15px;" action="#">
+            <form onsubmit="SubmitForm(); return false" style="padding: 15px;" action="#">
                 <input class="fullWidth bottomMargin" type="text" id="formTitle" placeholder="Enter post title..."
                     required>
                 <textarea class="fullWidth bottomMargin" style="resize: none;" id="formContent" placeholder="Enter post content..." rows="15"
@@ -147,6 +147,7 @@
                 minusRating: 0,
                 vote: 0
             });
+            console.log(blogPosts);
 
             document.getElementById("formTitle").value = "";
             document.getElementById("formContent").value = "";
