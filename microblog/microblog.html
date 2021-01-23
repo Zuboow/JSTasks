@@ -9,31 +9,32 @@
 <body>
     <div class="popupBackground">
         <div class="popupForm">
-            <button style="float: right" onclick="CloseForm()">X</button>
+            <button style="float: right; cursor: pointer;" onclick="CloseForm()">X</button>
             <br>
             <form onsubmit="SubmitForm()" style="padding: 15px;" action="#">
                 <input class="fullWidth bottomMargin" type="text" id="formTitle" placeholder="Enter post title..."
                     required>
-                <textarea class="fullWidth bottomMargin" style="resize: none;" id="formContent" placeholder="Enter post content..." rows="10"
+                <textarea class="fullWidth bottomMargin" style="resize: none;" id="formContent" placeholder="Enter post content..." rows="15"
                     required></textarea>
-                <input class="buttonPadding" type="submit">
+                <input style="border-radius: 20%; cursor: pointer;" class="buttonPadding" type="submit">
             </form>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row padding" style="color: white; background-color: #272727;">
         <div class="title">
             <h1>Welcome to my Microblog!</h1>
         </div>
         <div class="centerItems">
-            <button class="buttonPadding" onclick="OpenForm()">Add new Post</button>
+            <button style="cursor:pointer;" class="buttonPadding" onclick="OpenForm()">Add new Post</button>
         </div>
     </div>
-    <hr>
 
-    <div id="info"></div>
-    <br><input type='file' id='fileInput' accept='.json'><hr>
-    <div id="posts"></div>
+    <div class="padding">
+        <div id="info"></div>
+        <br><input type='file' id='fileInput' accept='.json'><hr>
+        <div id="posts"></div>
+    </div>
 
     <script type="text/javascript">
 
@@ -44,7 +45,7 @@
                 content: "This is content from post I.",
                 plusRating: 12,
                 minusRating: 0,
-                rated: false
+                vote: 0
             },
             {
                 id: 2,
@@ -52,7 +53,7 @@
                 content: "This is content from post II.",
                 plusRating: 2,
                 minusRating: 9,
-                rated: false
+                vote: 0
             },
             {
                 id: 3,
@@ -60,7 +61,7 @@
                 content: "This is content from post III.",
                 plusRating: 5,
                 minusRating: 1,
-                rated: false
+                vote: 0
             }
         ];
 
@@ -80,9 +81,10 @@
             blogPosts.forEach(post => {
                 document.getElementById("posts").innerHTML += 
                     "<p><div class='row'><div class='title'><b>" + post.title + "</b></div>"
-                    + "<div><button class='buttonPadding' onclick='RemovePost("+ post.id +")'>Remove post</button></div></div><br>" + post.content + "</p><br>"
-                    + (!post.rated ? "<button onclick='Rate(1, " + post.id + ")'>+</button><button onclick='Rate(-1, " + post.id + ")'>-</button><br>" : "")
-                    + "<span style='color: green;'>" + post.plusRating + "</span>/<span style='color:red;'>" + post.minusRating + "</span><hr>";
+                    + "<div><button style='cursor:pointer;' class='buttonPadding' onclick='RemovePost(" + post.id + ")'>Remove post</button></div></div><br>" + post.content + "</p><br>"
+                    + (post.vote == -1 ? "" : "<button class='plusButton " + (post.vote == 1 ? "longButton" : "") + "' style='cursor:pointer;' onclick='Rate(" + (post.vote == 0 ? 1 : 0) + ", " + post.id + ")'>+</button>")
+                    + (post.vote == 1 ? "" : "<button class='minusButton " + (post.vote == -1 ? "longButton" : "") + "' style='cursor:pointer;' onclick='Rate(" + (post.vote == 0 ? -1 : 0) + ", " + post.id + ")'>-</button>")
+                    + "<br><br><span style='color: green;'>" + post.plusRating + "</span> / <span style='color:red;'>" + post.minusRating + "</span><hr>";
             });
         };
 
@@ -92,7 +94,10 @@
                 blogPosts.forEach(post => {
                         if (post.id == id) {
                             post.plusRating++;
-                            post.rated = true;
+                            if (post.vote != 0){
+                                post.minusRating--;
+                            }
+                            post.vote = vote;
                         }
                     });
                     break;
@@ -100,7 +105,18 @@
                 blogPosts.forEach(post => {
                         if (post.id == id) {
                             post.minusRating++;
-                            post.rated = true;
+                            if (post.vote != 0){
+                                post.plusRating--;
+                            }
+                            post.vote = vote;
+                        }
+                    });
+                    break;
+                default:
+                    blogPosts.forEach(post => {
+                        if (post.id == id) {
+                            if (post.vote != 0) post.vote == 1 ? post.plusRating-- : post.minusRating--;
+                            post.vote = vote;
                         }
                     });
                     break;
@@ -129,10 +145,8 @@
                 content: document.getElementById("formContent").value,
                 plusRating: 0,
                 minusRating: 0,
-                rated: false
+                vote: 0
             });
-
-            console.log(blogPosts);
 
             document.getElementById("formTitle").value = "";
             document.getElementById("formContent").value = "";
@@ -174,6 +188,11 @@
 </html>
 
 <style>
+    body{
+        margin: 0;
+        background-color: rgb(224, 224, 224);
+    }
+
     .title {
         flex: 90%;
     }
@@ -181,6 +200,36 @@
     .row {
         display: flex;
     }
+
+    .padding{
+        padding: 15px;
+    }
+
+    button {
+        border-radius: 20%;
+    }
+
+    .plusButton {
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        width: 25px;
+        height: 25px;
+        text-align: center;
+    }
+
+    .minusButton {
+        border: none;
+        background-color: #f44336;
+        color: white;
+        width: 25px;
+        height: 25px;
+        text-align: center;
+    } 
+
+    .longButton {
+        width: 50px;
+    } 
 
     .buttonPadding {
         padding: 12px;
@@ -205,9 +254,9 @@
         margin: auto;
         margin-top: 10%;
         width: 40%;
-        height: 30%;
+        height: 40%;
         z-index: 6;
-        background-color: white;
+        background-color: #678a64;
     }
 
     .fullWidth {

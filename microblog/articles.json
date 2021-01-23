@@ -4,20 +4,20 @@
         "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         "plusRating": 3,
         "minusRating": 6,
-        "rated": false
+        "vote": 0
     },
     {
         "title": "Lorem Ipsum II",
         "content": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
         "plusRating": 11,
         "minusRating": 1,
-        "rated": false
+        "vote": 0
     },
     {
         "title": "Lorem Ipsum III",
         "content": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         "plusRating": 0,
         "minusRating": 9,
-        "rated": false
+        "vote": 0
     }
 ]
